@@ -1,0 +1,2 @@
+class NumeroJogadoresException < Exception
+end

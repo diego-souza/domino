@@ -1,0 +1,2 @@
+class Regras
+end
