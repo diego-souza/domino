@@ -14,17 +14,7 @@ describe Jogo do
     expect { Jogo.new "Rennan", "Hugo", "Igor", "Hudson", "Diego" }.to raise_error NumeroJogadoresException
   end
 
-  it "deve ser inicializado com todas as pedras na pilha" do
-    jogo = Jogo.new "Rennan", "Hugo"
-    jogo.pilha.size.should == 28
-  end
-
-  it "deve ser inicializado com as pedras de forma aleatória" do
-    Jogo::PEDRAS_DO_JOGO.should_receive(:shuffle)
-    jogo = Jogo.new "Rennan", "Hugo"
-  end
-
-  describe "#distribuir" do
+  describe "#distribuir_pedras" do
     it "deve distribuir 7 pedras para cada jogador" do
       jogo = Jogo.new "Rennan", "Igor"
       jogo.distribuir_pedras
@@ -46,9 +36,44 @@ describe Jogo do
     end
   end
 
-  describe "#tem_primeiro_jogador?" do
-    it "deve retornar true caso algum jogador tenha pedra dupla" do
-      jogo = Jogo.new "Rennan", "Igor", "Hugo", "Hudson"
+  describe "#comecar" do
+    it "deve definir primeiro jogador" do
+      jogo = Jogo.new "Rennan", "Igor"
+      primeiro_jogador = stub
+      Regras.should_receive(:primeiro_jogador).and_return(primeiro_jogador)
+      jogo.comecar
+      jogo.jogador_da_vez.should == primeiro_jogador
+    end
+
+    it "deve distribuir pedras enquanto não houver jogador da vez" do
+      jogo = Jogo.new "Rennan", "Igor"
+      primeiro_jogador = stub
+      jogo.should_receive(:distribuir_pedras).twice
+      Regras.should_receive(:primeiro_jogador).and_return(nil)
+      Regras.should_receive(:primeiro_jogador).and_return(primeiro_jogador)
+      jogo.comecar
+      jogo.jogador_da_vez.should == primeiro_jogador
+    end
+
+    it "deve recarregar pilha a cada distribuição" do
+      jogo = Jogo.new "Rennan", "Igor"
+      Regras.should_receive(:primeiro_jogador).and_return(nil)
+      Regras.should_receive(:primeiro_jogador).and_return(stub)
+      jogo.comecar
+      jogo.pilha.size.should == 14
+    end
+
+    it "deve ser inicializado com as pedras de forma aleatória" do
+      jogo = Jogo.new "Rennan", "Hugo"
+      Jogo::PEDRAS_DO_JOGO.should_receive(:shuffle).and_return(Jogo::PEDRAS_DO_JOGO)
+      jogo.comecar
     end
   end
+
+#  describe "#jogador_da_vez" do
+#    it "" do
+#      jogo = Jogo.new "Rennan", "Igor", "Hugo", "Hudson"
+#      jogo.jogador_da_vez
+#    end
+#  end
 end

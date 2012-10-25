@@ -17,4 +17,20 @@ describe Jogador do
     jogador.pedras = pedras
     jogador.pedras.should == pedras
   end
+
+  describe "#maior_pedra_dupla" do
+    it "deveria retornar -1 se não tiver nenhuma pedra dupla" do
+      jogador = Jogador.new("Nome")
+      pedras = [[2,3]]
+      jogador.pedras = pedras
+      jogador.maior_pedra_dupla.should == -1
+    end
+
+    it "deveria retornar o numero da maior pedra dupla caso a tenha" do
+      jogador = Jogador.new("Nome")
+      pedras = [[6,6], [3,3]]
+      jogador.pedras = pedras
+      jogador.maior_pedra_dupla.should == 6
+    end
+  end
 end

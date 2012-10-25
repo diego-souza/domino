@@ -6,4 +6,12 @@ class Jogador
     @nome = nome
     @pedras = []
   end
+
+  def maior_pedra_dupla
+    maior = -1
+    (0..6).each do |i|
+      maior = i if @pedras.include? [i,i]
+    end
+    maior
+  end
 end
